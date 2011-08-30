@@ -3,7 +3,7 @@ require 'net/https'
 
 module TM4B
    class Client
-      BaseURI = URI.parse("https://www.tm4b.com:80/client/api/http.php").freeze
+      BaseURI = URI.parse("http://www.tm4b.com/client/api/http.php").freeze
 
       attr_accessor :username, :password, :use_ssl
 
@@ -105,11 +105,11 @@ module TM4B
    private
 
       def request(params)
-         req = Net::HTTP::Post.new(BaseURI.path)
+         req = Net::HTTP::Post.new("/client/api/http.php")
          
          req.set_form_data params.merge(:username => username, :password => password)
          
-         conn = Net::HTTP.new(BaseURI.host, BaseURI.port)
+         conn = Net::HTTP.new("www.tm4b.com", use_ssl ? 443 : 80)
          conn.use_ssl = use_ssl
          conn.start {|http| http.request(req) }
       end
@@ -120,7 +120,7 @@ module TM4B
          code = $1.to_i
          message = $2
 
-         raise TM4B::ServiceError.new(code, $2)
+         raise TM4B::ServiceError.new(code, message)
       end
    end
 end

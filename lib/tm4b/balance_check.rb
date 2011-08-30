@@ -23,5 +23,9 @@ module TM4B
             @balance[currency] = amount
          end
       end
+
+      def to_s
+         "TM4B::BalanceCheck\n" + balance.map {|currency, amount| "\t#{currency}: #{amount}" }.join("\n")
+      end
    end
 end

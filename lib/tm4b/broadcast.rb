@@ -83,5 +83,29 @@ module TM4B
 
          params
       end
+
+      def to_s
+         <<-EOS
+            TM4B::Broadcast
+               request
+                  recipients: #{@recipients.join ", "}
+                  originator: #{@originator}
+                  encoding: #{@encoding}
+                  split_method: #{@split_method}
+                  route: #{@route}
+                  simulated #{@simulated}
+                  message: #{@message}
+                  parameters: #{parameters.inspect}
+
+               response
+                  broadcast_id: #{@broadcast_id}
+                  recipient_count: #{@recipient_count}
+                  credits: #{@credits}
+                  balance: #{@balance}
+                  balance_type: #{@balance_type}
+                  neglected: #{@neglected}
+
+         EOS
+      end
    end
 end

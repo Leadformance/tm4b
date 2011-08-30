@@ -1,2 +1,99 @@
 #!/usr/bin/env ruby
-puts "hiya, i'm not done yet"
+require "rubygems"
+require "thor"
+require File.expand_path("../lib/tm4b", File.dirname(__FILE__))
+
+class Tm4bTest < Thor
+   desc "broadcast", "Sends a SMS message through the TM4B service"
+   method_option :recipient,  :aliases => "-r", :type => :string, :required => true
+   method_option :username,   :aliases => "-u", :type => :string, :default => nil
+   method_option :password,   :aliases => "-w", :type => :string, :default => nil
+   method_option :ssl,        :aliases => "-x", :type => :boolean, :default => false
+   method_option :originator, :aliases => "-o", :type => :string, :default => "rubycli"
+   method_option :message,    :aliases => "-m", :type => :string, :default => "Test message from the TM4b CLI"
+   method_option :simulate,   :aliases => "-s", :type => :boolean, :default => false
+   method_option :split,      :aliases => "-t", :type => :string, :default => "concatenation_graceful"
+   method_option :route,      :aliases => "-p", :type => :string, :default => nil
+   method_option :encoding,   :aliases => "-e", :type => :string, :default => "unicode"
+   def broadcast
+      recipient    = options[:recipient].gsub(/\D+/, '')
+      originator   = options[:originator]
+      message      = options[:message]
+      params       = {
+         :simulated => options[:simulate],
+         :split_method => options[:split].to_sym,
+         :route => options[:route],
+         :encoding => options[:encoding].to_sym
+      }
+
+      valid_split_methods = TM4B::Protocol::SplitMethods.keys.map(&:to_s)
+
+      if not TM4B::Protocol::SplitMethods[params[:split_method]]
+         STDERR.puts "'#{params[:split_method]}' is not a valid splitting method, use one of the following: \n\t#{valid_split_methods.join "\n\t"}"
+         exit(1)
+      end
+
+      if not TM4B::Protocol::EncodingTypes.include?(params[:encoding])
+         STDERR.puts "'#{params[:encoding]}' is not a valid encoding type, use one of the following: \n\t#{TM4B::Protocol::EncodingTypes.join "\n\t"}"
+         exit(1)
+      end
+
+      unless (1..11).include?(originator.length)
+         STDERR.puts "originator must be between 1 and 11 characters (inclusive)"
+         exit(1)
+      end
+
+      result = client.broadcast(recipient, originator, message, params)
+
+      STDOUT.puts result.to_s
+   end
+
+   desc "check_balance", "Checks the balance of your TM4B account"
+   method_option :username,   :aliases => "-u", :type => :string, :default => nil
+   method_option :password,   :aliases => "-w", :type => :string, :default => nil
+   method_option :ssl,        :aliases => "-x", :type => :boolean, :default => false
+   def check_balance
+      STDOUT.puts client.check_balance.to_s
+   end
+
+   desc "check_status", "Checks the status of a given SMS message"
+   method_option :username,   :aliases => "-u", :type => :string, :default => nil
+   method_option :password,   :aliases => "-w", :type => :string, :default => nil
+   method_option :ssl,        :aliases => "-x", :type => :boolean, :default => false
+   method_option :id,         :aliases => "-i", :type => :string
+   method_option :data,       :aliases => "-d", :type => :string
+   def check_status
+      STDOUT.puts client.check_status :sms_id => options[:id], :custom_data => options[:data]
+   end
+
+private
+   def client
+      username = options[:username] || get_username
+      password = options[:password] || get_password
+      use_ssl  = options.has_key?("ssl") ? options["ssl"] : false
+
+      TM4B::Client.new(:username => username, :password => password, :use_ssl => use_ssl)
+   end
+
+   def get_username
+      STDOUT.print "Enter username: "
+      STDIN.readline.strip
+   end
+
+   def get_password
+      system "stty -echo"
+      
+      STDOUT.print "Enter password: "
+      
+      password = STDIN.readline.strip
+      
+      system "stty echo"
+      
+      print "\n"
+
+      password
+   end
+
+end
+
+Tm4bTest.start

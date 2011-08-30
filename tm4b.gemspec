@@ -21,6 +21,8 @@ Gem::Specification.new do |s|
   
   s.files = Dir.glob("lib/**/*.rb") + %w(Gemfile Gemfile.lock)
   s.test_files = Dir.glob("spec/**/*.rb")
+
+  s.add_dependency "thor"
   
   s.add_development_dependency "rake"
 

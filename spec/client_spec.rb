@@ -9,11 +9,6 @@ describe TM4B::Client do
       TM4B.config.use_ssl  = true
    end
 
-   it 'should use the appropriate base url' do
-      TM4B::Client::BaseURI.should be_a URI
-      TM4B::Client::BaseURI.to_s.should == "https://www.tm4b.com:80/client/api/http.php"
-   end
-
    it 'should accept options for an overridden username, password and ssl' do
       default_client = TM4B::Client.new
       default_client.username.should == "foo"
@@ -41,7 +36,7 @@ describe TM4B::Client do
             </result>
          EOS
 
-         FakeWeb.register_uri :post, TM4B::Client::BaseURI.dup, :body => @success_response
+         FakeWeb.register_uri :post, "https://www.tm4b.com/client/api/http.php", :body => @success_response
       end
 
       it 'should broadcast a message, returning a receipt' do
@@ -95,7 +90,7 @@ describe TM4B::Client do
             </result>
          EOS
 
-         FakeWeb.register_uri :post, TM4B::Client::BaseURI.dup, :body => @success_response
+         FakeWeb.register_uri :post, "https://www.tm4b.com/client/api/http.php", :body => @success_response
       end
 
       it "should request a balance returning a receipt" do
@@ -127,7 +122,7 @@ describe TM4B::Client do
             </result>
          EOS
 
-         FakeWeb.register_uri :post, TM4B::Client::BaseURI.dup, :body => @success_response
+         FakeWeb.register_uri :post, "https://www.tm4b.com/client/api/http.php", :body => @success_response
       end
 
       it "should request status returning a receipt" do

@@ -1,4 +1,5 @@
 require 'rexml/document'
+require 'date'
 
 module TM4B
    class StatusCheck
@@ -26,6 +27,10 @@ module TM4B
 
          @status = values[0]
          @timestamp = values[1] ? DateTime.strptime(values[1], "%y%m%d%H%M") : nil
+      end
+
+      def to_s
+         "TM4B::StatusCheck\n" + %w(sms_id custom status timestamp).map {|x| "\t#{x}: #{send(x)}" }.join("\n")
       end
    end
 end
