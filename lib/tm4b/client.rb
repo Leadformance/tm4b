@@ -1,3 +1,6 @@
+require 'net/http'
+require 'net/https'
+
 module TM4B
    class Client
       BaseURI = URI.parse("https://www.tm4b.com:80/client/api/http.php").freeze
@@ -115,8 +118,9 @@ module TM4B
          return unless body =~ /^error\((\d+)\|(.+)\)$/
          
          code = $1.to_i
+         message = $2
 
-         raise TM4B::ServiceError.new(code, Protocol::ErrorCodes[code])
+         raise TM4B::ServiceError.new(code, $2)
       end
    end
 end

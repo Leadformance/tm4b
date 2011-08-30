@@ -5,12 +5,18 @@ module TM4B
       attr_accessor :sms_id, :custom, :status, :timestamp
 
       def parameters
-         {
+         params = {
             "version" => "2.1",
-            "type" => "check_status",
-            "smsid" => sms_id,
-            "custom" => custom
+            "type" => "check_status"
          }
+
+         if sms_id
+            params["smsid"] = sms_id 
+         else
+            params["custom"] = custom
+         end
+
+         params
       end
 
       def raw_response=(body)
@@ -19,7 +25,7 @@ module TM4B
          values = REXML::XPath.first(document, '/result/report/child::text()').value.split("|")
 
          @status = values[0]
-         @timestamp = DateTime.strptime(values[1], "%Y%m%d%H%M")
+         @timestamp = values[1] ? DateTime.strptime(values[1], "%y%m%d%H%M") : nil
       end
    end
 end

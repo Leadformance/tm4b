@@ -56,7 +56,7 @@ describe TM4B::Client do
 
          lambda do
             @client.broadcast "+1 213 555-0100", "tm4bsuite", "hello world"
-         end.should raise_error TM4B::ServiceError, "The account's credentials could not be verified"
+         end.should raise_error TM4B::ServiceError, "Invalid Username or Password"
       end
 
       it 'should assign response values on successful response' do
@@ -113,7 +113,7 @@ describe TM4B::Client do
 
          lambda do
             @client.check_balance
-         end.should raise_error TM4B::ServiceError, "The account's credentials could not be verified"
+         end.should raise_error TM4B::ServiceError, "Invalid Username or Password"
       end
    end
 
@@ -123,7 +123,7 @@ describe TM4B::Client do
 
          @success_response = <<-EOS
             <result>
-               <report>FAILED|201103070715</report>
+               <report>FAILED|1103070715</report>
             </result>
          EOS
 
@@ -155,7 +155,7 @@ describe TM4B::Client do
 
          lambda do
             @client.check_status :sms_id => "foo"
-         end.should raise_error TM4B::ServiceError, "The account's credentials could not be verified"
+         end.should raise_error TM4B::ServiceError, "Invalid Username or Password"
       end
 
       it "should assign the status and timestamp when complete" do
