@@ -10,9 +10,9 @@ describe TM4B::Client do
 
       @success_response = <<-EOS
          <result>
-            <broadcastid>MT0017295001</broadcastid>
+            <broadcastID>MT0017295001</broadcastID>
             <recipients>1</recipients>
-            <balancetype>GBP</balancetype>
+            <balanceType>GBP</balanceType>
             <credits>5.0</credits>
             <balance>5995.0</balance>
             <neglected>-</neglected>
@@ -54,6 +54,40 @@ describe TM4B::Client do
       lambda do
          client.broadcast "+1 213 555-0100", "tm4bsuite", "hello world"
       end.should raise_error TM4B::ServiceError, "The account's credentials could not be verified"
+   end
+
+   it 'should assign response values on successful response' do
+      client = TM4B::Client.new
+      result = client.broadcast "+1 213 555-0100", "tm4bsuite", "hello world"
+      result.broadcast_id.should == "MT0017295001"
+   end
+
+   it 'should assign the simulated flag if defined' do
+      client = TM4B::Client.new
+      result = client.broadcast "+1 213 555-0100", "tm4bsuite", "hello world", :simulated => true
+
+      result.simulated.should be_true
+   end
+
+   it 'should assign the split_method if defined' do
+      client = TM4B::Client.new
+      result = client.broadcast "+1 213 555-0100", "tm4bsuite", "hello world", :split_method => :no_split
+
+      result.split_method.should == :no_split
+   end
+
+   it 'should assign the route if defined' do
+      client = TM4B::Client.new
+      result = client.broadcast "+1 213 555-0100", "tm4bsuite", "hello world", :route => "GD01"
+
+      result.route.should == "GD01"
+   end
+
+   it 'should assign the encoding if defined' do
+      client = TM4B::Client.new
+      result = client.broadcast "+1 213 555-0100", "tm4bsuite", "hello world", :encoding => :plain
+
+      result.encoding.should == :plain
    end
 
 end

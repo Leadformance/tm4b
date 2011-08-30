@@ -10,15 +10,49 @@ module TM4B
          @use_ssl  = options.fetch(:use_ssl,  TM4B.config.use_ssl)
       end
 
+      #
+      # Broadcasts an SMS message to a recipient.
+      #
+      # @param [String|Array] recipients The MSISDN (sms number) for the recipients
+      # 
+      # @param [String] originator The string used for the sender name, must be
+      #   between 1 and 11 characters (inclusive)
+      #
+      # @param [String] message The content of the message
+      #
+      # @param [Hash] options Optional values when sending this message
+      #
+      # @option options [Boolean] :simulated (false) makes the broadcast not
+      #   deliver but simulates what the result would be 
+      # 
+      # @option options [Fixnum] :split_method (:concatenation_graceful) Defines
+      #   which split method the service will use when sending very long messages
+      #   to the recipient that exceed the single message maximum length.  The
+      #   value passed must be a key of the Tm4b::Protocol::SplitMethods hash.
+      #
+      # @option options [String] :route (nil) Defines which delivery route to
+      #   use when sending this message.  See the TM4b API docs for details.
+      #
+      # @option options [String] :encoding ("unicode") Defines which encoding to
+      #   use when sending this message.  Use either "unicode" or "plain" or nil
+      #
       def broadcast(recipients, originator, message, options={})
          broadcast = Broadcast.new
          broadcast.recipients = recipients
          broadcast.originator = originator
          broadcast.message    = message
 
+         
+         broadcast.simulated = true if options[:simulated]
+         broadcast.split_method = options[:split_method] if options[:split_method]
+         broadcast.route = options[:route] if options[:route]
+         broadcast.encoding = options[:encoding] if options[:encoding]
+
          response = request(broadcast.parameters)
 
          raise_if_service_error(response.body)
+
+         broadcast.raw_response = response.body
 
          broadcast
       end

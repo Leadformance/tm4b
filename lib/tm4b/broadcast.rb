@@ -1,3 +1,4 @@
+require 'rexml/document'
 
 module TM4B
    class Broadcast
@@ -39,11 +40,27 @@ module TM4B
          end
       end
 
-      attr_accessor :message, :route
+      attr_accessor :message, :route, :simulated
+
+      # response variables
+      attr_accessor :broadcast_id, :recipient_count, :balance_type, :credits, :balance, :neglected
 
       def initialize
          @encoding = :unicode
          @split_method = :concatenation_graceful
+      end
+
+      def raw_response=(body)
+         # parse the response body into an XML document
+         document = REXML::Document.new(body)
+
+         # use XPath to parse the values from the response
+         @broadcast_id    = REXML::XPath.first(document, '/result/broadcastID/child::text()').value
+         @recipient_count = REXML::XPath.first(document, '/result/recipients/child::text()').value
+         @credits      = REXML::XPath.first(document, '/result/credits/child::text()').value.to_f
+         @balance      = REXML::XPath.first(document, '/result/balance/child::text()').value.to_f
+         @balance_type = REXML::XPath.first(document, '/result/balanceType/child::text()').value
+         @neglected    = REXML::XPath.first(document, '/result/neglected/child::text()').value
       end
 
       #
@@ -51,7 +68,7 @@ module TM4B
       # the TM4B API.  Does not include the username and password variables.
       #
       def parameters
-         {
+         params = {
             "version"      => "2.1",
             "type"         => "broadcast",
             "to"           => recipients.join("|"),
@@ -59,8 +76,12 @@ module TM4B
             "msg"          => message,
             "data_type"    => encoding.to_s,
             "split_method" => Protocol::SplitMethods[split_method],
-            "route"        => route
          }
+
+         params["route"] = route if route
+         params["sim"] = "yes" if simulated
+
+         params
       end
    end
 end

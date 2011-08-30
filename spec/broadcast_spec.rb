@@ -41,6 +41,8 @@ describe TM4B::Broadcast do
    it "should define parameters for the api" do
       @broadcast.recipients = ["+1 (213) 555-0100", "+1 (213) 555-0101"]
       @broadcast.route = "foo"
+      @broadcast.simulated = true
+
       @broadcast.parameters.should == {
          "version" => "2.1",
          "type" => "broadcast",
@@ -49,7 +51,28 @@ describe TM4B::Broadcast do
          "msg" => "hello world",
          "data_type" => "unicode",
          "split_method" => 8,
-         "route" => "foo"
+         "route" => "foo",
+         "sim" => "yes"
       }
+   end
+
+   it "should assign result data from a raw xml response body" do
+      @broadcast.raw_response = <<-EOS
+         <result>
+            <broadcastID>MT0017295001</broadcastID>
+            <recipients>1</recipients>
+            <balanceType>GBP</balanceType>
+            <credits>5.0</credits>
+            <balance>5995.0</balance>
+            <neglected>-</neglected>
+         </result>
+      EOS
+
+      @broadcast.broadcast_id.should == "MT0017295001"
+      @broadcast.recipient_count.should == "1"
+      @broadcast.balance_type.should == "GBP"
+      @broadcast.credits.should == 5
+      @broadcast.balance.should == 5995
+      @broadcast.neglected.should == "-"
    end
 end
