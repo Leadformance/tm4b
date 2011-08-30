@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'ostruct'
 
 describe TM4B::Client do
 
@@ -42,6 +43,17 @@ describe TM4B::Client do
       client = TM4B::Client.new
       result = client.broadcast "+1 213 555-0100", "tm4bsuite", "hello world"
       result.should be_a TM4B::Broadcast
+   end
+
+   it 'should raise a service error when receiving an error response' do
+      response = OpenStruct.new(:body => "error(0002|Invalid Username or Password)")
+
+      client = TM4B::Client.new
+      client.should_receive(:request).and_return response
+
+      lambda do
+         client.broadcast "+1 213 555-0100", "tm4bsuite", "hello world"
+      end.should raise_error TM4B::ServiceError, "The account's credentials could not be verified"
    end
 
 end

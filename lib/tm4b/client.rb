@@ -18,6 +18,8 @@ module TM4B
 
          response = request(broadcast.parameters)
 
+         raise_if_service_error(response.body)
+
          broadcast
       end
 
@@ -31,6 +33,14 @@ module TM4B
          conn = Net::HTTP.new(BaseURI.host, BaseURI.port)
          conn.use_ssl = use_ssl
          conn.start {|http| http.request(req) }
+      end
+
+      def raise_if_service_error(body)
+         return unless body =~ /^error\((\d+)\|(.+)\)$/
+         
+         code = $1.to_i
+
+         raise TM4B::ServiceError.new(code, Protocol::ErrorCodes[code])
       end
    end
 end
