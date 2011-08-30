@@ -58,12 +58,37 @@ module TM4B
       end
 
       #
-      # Queries the TM4B server for the current balance of the SMS account, the result is returned
-      # as a two element array, the first being the floating point number of credits and the second 
-      # being the currency
+      # Queries the TM4B server for the current balance of the SMS account.
       #
       def check_balance
          check = BalanceCheck.new
+
+         response = request(check.parameters)
+
+         raise_if_service_error(response.body)
+
+         check.raw_response = response.body
+
+         check
+      end
+
+      #
+      # Queries the TM4B server for the status of a sms message delivery.  Two
+      # options are given but at least one must be provided.
+      #
+      # @param [Hash] options
+      # @option options [String] :sms_id Search option using sms id
+      # @option options [String] :custom_data Search option using custom data
+      #
+      def check_status(options)
+         check = StatusCheck.new
+
+         if not options[:sms_id] and not options[:custom_data]
+            raise "one of :sms_id or :custom_data are required"
+         end
+
+         check.sms_id = options[:sms_id]
+         check.custom = options[:custom_data]
 
          response = request(check.parameters)
 
