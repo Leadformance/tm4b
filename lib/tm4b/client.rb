@@ -57,6 +57,23 @@ module TM4B
          broadcast
       end
 
+      #
+      # Queries the TM4B server for the current balance of the SMS account, the result is returned
+      # as a two element array, the first being the floating point number of credits and the second 
+      # being the currency
+      #
+      def check_balance
+         check = BalanceCheck.new
+
+         response = request(check.parameters)
+
+         raise_if_service_error(response.body)
+
+         check.raw_response = response.body
+
+         check
+      end
+
    private
 
       def request(params)
