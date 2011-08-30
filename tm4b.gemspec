@@ -13,13 +13,11 @@ Gem::Specification.new do |s|
   s.default_executable = %q{tm4b}
   s.executables = ["tm4b"]
 
-  s.extra_rdoc_files = ["README.markdown"]
-
   s.require_paths = ["lib"]
 
   s.summary = %q{TM4b HTTP API implementation}
   
-  s.files = Dir.glob("lib/**/*.rb") + %w(Gemfile Gemfile.lock)
+  s.files = Dir.glob("lib/**/*.rb") + %w(Gemfile)
   s.test_files = Dir.glob("spec/**/*.rb")
 
   s.add_dependency "thor"
