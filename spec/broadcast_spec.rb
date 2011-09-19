@@ -7,13 +7,19 @@ describe TM4B::Broadcast do
       @broadcast.originator = "tm4btest"
       @broadcast.message = "hello world"
    end
+   
+   it "should return an encoded string if 'plain' encoding if selected" do
+     @broadcast.message = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöùúûüýÿ"
+     @broadcast.encoding = :plain
+     @broadcast.parameters["msg"].should == "AAAAAACEEEEIIIINOOOOOUUUUYaaaaaaceeeeiiiinooooouuuuyy"
+   end
 
    it "should strip nondigits from the recipient" do
       @broadcast.recipients.should == ["12135550100"]
    end
 
-   it "should assign 'unicode' as the encoding by default" do
-      @broadcast.encoding.should == :unicode
+   it "should assign 'plain' as the encoding by default" do
+      @broadcast.encoding.should == :plain
    end
 
    it "should assign :concatenation_graceful as the default splitting method" do
@@ -49,7 +55,7 @@ describe TM4B::Broadcast do
          "to" => "12135550100|12135550101",
          "from" => "tm4btest",
          "msg" => "hello world",
-         "data_type" => "unicode",
+         "data_type" => "plain",
          "split_method" => 8,
          "route" => "foo",
          "sim" => "yes"

@@ -1,4 +1,4 @@
-
+require 'active_support/multibyte/chars'
 require File.expand_path("tm4b/protocol", File.dirname(__FILE__))
 require File.expand_path("tm4b/service_error", File.dirname(__FILE__))
 require File.expand_path("tm4b/client", File.dirname(__FILE__))

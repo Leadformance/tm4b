@@ -39,6 +39,14 @@ module TM4B
             raise "invalid splitting method: #{method}"
          end
       end
+      
+      def encoded_message
+        if @encoding.to_s == "plain"
+          ActiveSupport::Multibyte.proxy_class.new(@message).gsub("€", "E").normalize(:kd).gsub(/[^\x00-\x7F]/n,'').to_s
+        else
+          @message
+        end
+      end
 
       attr_accessor :message, :route, :simulated
 
@@ -46,7 +54,7 @@ module TM4B
       attr_accessor :broadcast_id, :recipient_count, :balance_type, :credits, :balance, :neglected
 
       def initialize
-         @encoding = :unicode
+         @encoding = :plain
          @split_method = :concatenation_graceful
       end
 
@@ -73,7 +81,7 @@ module TM4B
             "type"         => "broadcast",
             "to"           => recipients.join("|"),
             "from"         => originator,
-            "msg"          => message,
+            "msg"          => encoded_message,
             "data_type"    => encoding.to_s,
             "split_method" => Protocol::SplitMethods[split_method],
          }

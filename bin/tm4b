@@ -14,7 +14,7 @@ class Tm4bTest < Thor
    method_option :simulate,   :aliases => "-s", :type => :boolean, :default => false
    method_option :split,      :aliases => "-t", :type => :string, :default => "concatenation_graceful"
    method_option :route,      :aliases => "-p", :type => :string, :default => nil
-   method_option :encoding,   :aliases => "-e", :type => :string, :default => "unicode"
+   method_option :encoding,   :aliases => "-e", :type => :string, :default => "plain"
    def broadcast
       recipient    = options[:recipient].gsub(/\D+/, '')
       originator   = options[:originator]

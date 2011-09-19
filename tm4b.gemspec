@@ -30,6 +30,8 @@ Gem::Specification.new do |s|
   # to make testing more fun (if only it needed less configuration)
   s.add_development_dependency "guard"
   s.add_development_dependency "guard-rspec"
+  
+  s.add_dependency "active_support"
 
   if RUBY_PLATFORM =~ /darwin/i
     # filesystem event support for OSX
