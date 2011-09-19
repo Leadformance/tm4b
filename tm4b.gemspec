@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "guard"
   s.add_development_dependency "guard-rspec"
   
-  s.add_dependency "active_support"
+  s.add_dependency "activesupport", "= 3.0.10"
 
   if RUBY_PLATFORM =~ /darwin/i
     # filesystem event support for OSX
