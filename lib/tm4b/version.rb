@@ -1,4 +1,4 @@
-
+# encoding: utf-8
 module TM4B
    class Version
       MAJOR = 1
