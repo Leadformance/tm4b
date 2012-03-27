@@ -43,8 +43,16 @@ module TM4B
       end
       
       def encoded_message
+        @message.
+          encode!("ISO-8859-1", :invalid => :replace, :replace => "").
+          encode!("UTF-8")
+          
         if @encoding.to_s == "plain"
-          ActiveSupport::Multibyte.proxy_class.new(@message).gsub("€", "E").normalize(:kd).gsub(/[^\x00-\x7F]/n,'').to_s
+          ActiveSupport::Multibyte.proxy_class.new(@message).
+            gsub("€", "E").
+            normalize(:kd).
+            gsub(/[^\x00-\x7F]/n,'').
+            to_s
         else
           @message
         end
