@@ -1,3 +1,4 @@
+#coding : utf-8
 require 'spec_helper'
 
 describe TM4B::Broadcast do
@@ -12,6 +13,12 @@ describe TM4B::Broadcast do
      @broadcast.message = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöùúûüýÿ"
      @broadcast.encoding = :plain
      @broadcast.parameters["msg"].should == "AAAAAACEEEEIIIINOOOOOUUUUYaaaaaaceeeeiiiinooooouuuuyy"
+   end
+   
+   it "should return valid string even if it's not UTF8 compliant" do
+     @broadcast.message = "\xE2"
+     @broadcast.encoding = :plain
+     @broadcast.parameters["msg"].should == ""
    end
 
    it "should strip nondigits from the recipient" do
