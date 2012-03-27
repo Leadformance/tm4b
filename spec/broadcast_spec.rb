@@ -20,6 +20,12 @@ describe TM4B::Broadcast do
      @broadcast.encoding = :plain
      @broadcast.parameters["msg"].should == ""
    end
+   
+   it "should return valid string even if it's not UTF8 compliant" do
+     @broadcast.message = "\xE2"
+     @broadcast.encoding = :unicode
+     @broadcast.parameters["msg"].should == ""
+   end
 
    it "should strip nondigits from the recipient" do
       @broadcast.recipients.should == ["12135550100"]
