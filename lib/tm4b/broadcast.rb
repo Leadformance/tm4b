@@ -41,17 +41,17 @@ module TM4B
             raise "invalid splitting method: #{method}"
          end
       end
-      
+
       def encoded_message
         @message.
           encode!("ISO-8859-1", :invalid => :replace, :replace => "").
           encode!("UTF-8")
-          
+
         if @encoding.to_s == "plain"
           ActiveSupport::Multibyte.proxy_class.new(@message).
             gsub("€", "E").
             normalize(:kd).
-            gsub(/[^\x00-\x7F]/n,'').
+            gsub(/[^\x00-\x7F]/,'').
             to_s
         else
           @message
@@ -82,7 +82,7 @@ module TM4B
       end
 
       #
-      # Returns a presentation of the broadcast variables for transmission to 
+      # Returns a presentation of the broadcast variables for transmission to
       # the TM4B API.  Does not include the username and password variables.
       #
       def parameters
