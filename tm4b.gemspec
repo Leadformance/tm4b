@@ -16,12 +16,12 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.summary = %q{TM4b HTTP API implementation}
-  
+
   s.files = Dir.glob("lib/**/*.rb") + %w(Gemfile)
   s.test_files = Dir.glob("spec/**/*.rb")
 
   s.add_dependency "thor"
-  
+
   s.add_development_dependency "rake"
 
   s.add_development_dependency "rspec", ">= 2.6.0"
@@ -30,8 +30,8 @@ Gem::Specification.new do |s|
   # to make testing more fun (if only it needed less configuration)
   s.add_development_dependency "guard"
   s.add_development_dependency "guard-rspec"
-  
-  s.add_dependency "activesupport", "<= 3.2.2"
+
+  s.add_dependency "activesupport", "~> 3.0"
 
   if RUBY_PLATFORM =~ /darwin/i
     # filesystem event support for OSX
