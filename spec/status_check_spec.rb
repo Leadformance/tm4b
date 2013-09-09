@@ -2,9 +2,7 @@ require 'spec_helper'
 
 describe TM4B::StatusCheck do
    before do
-      @check = TM4B::StatusCheck.new
-      @check.sms_id = "FooBar"
-      @check.custom = "Baz"
+      @check = TM4B::StatusCheck.new({:sms_id => "FooBar"})
    end
 
    it "should define parameters for the api" do
@@ -35,5 +33,14 @@ describe TM4B::StatusCheck do
 
       @check.status.should == "SUBMITD"
       @check.timestamp.should == nil
+   end
+   
+   it "should not be valid if neither :sms_id or :custom_data are provided" do
+     TM4B::StatusCheck.new({}).valid?.should be_false
+   end
+   
+    it "should be valid if either :sms_id or :custom_data is provided" do
+     TM4B::StatusCheck.new(:sms_id => 123).valid?.should be_true
+     TM4B::StatusCheck.new(:custom_data => "data").valid?.should be_true
    end
 end
