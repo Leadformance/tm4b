@@ -133,7 +133,7 @@ describe TM4B::Client do
       it "should raise an error when neither :sms_id or :custom_data are provided" do
          lambda do
             @client.check_status({})
-         end.should raise_error "one of :sms_id or :custom_data are required"
+         end.should raise_error(ArgumentError, "either :sms_id or :custom_data is required")
       end
 
       it "should assign the sms_id and custom_data parameters" do

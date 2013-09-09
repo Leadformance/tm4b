@@ -86,22 +86,17 @@ module TM4B
       # @option options [String] :custom_data Search option using custom data
       #
       def check_status(options)
-         check = StatusCheck.new
+        check = StatusCheck.new(options)
 
-         if not options[:sms_id] and not options[:custom_data]
-            raise "one of :sms_id or :custom_data are required"
-         end
+        raise ArgumentError, "either :sms_id or :custom_data is required" if !check.valid?
 
-         check.sms_id = options[:sms_id]
-         check.custom = options[:custom_data]
+        response = request(check.parameters)
 
-         response = request(check.parameters)
+        raise_if_service_error(response.body)
 
-         raise_if_service_error(response.body)
+        check.raw_response = response.body
 
-         check.raw_response = response.body
-
-         check
+        check
       end
 
    private
