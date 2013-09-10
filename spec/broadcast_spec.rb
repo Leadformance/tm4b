@@ -3,10 +3,7 @@ require 'spec_helper'
 
 describe TM4B::Broadcast do
    before do
-      @broadcast = TM4B::Broadcast.new
-      @broadcast.recipients = "+1 213 555-0100"
-      @broadcast.originator = "tm4btest"
-      @broadcast.message = "hello world"
+      @broadcast = TM4B::Broadcast.new(:recipients => "+1 213 555-0100", :originator => "tm4btest", :message => "hello world")
    end
    
    it "should return an encoded string if 'plain' encoding if selected" do
