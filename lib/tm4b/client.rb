@@ -7,12 +7,8 @@ module TM4B
    class Client
       BaseURI = URI.parse("http://www.tm4b.com/client/api/http.php").freeze
 
-      attr_accessor :username, :password, :use_ssl
-
       def initialize(options={})
-         @username = options.fetch(:username, TM4B.config.username)
-         @password = options.fetch(:password, TM4B.config.password)
-         @use_ssl  = options.fetch(:use_ssl,  TM4B.config.use_ssl)
+         options.each{|key, value| TM4B.config.send("#{key}=", value)}
       end
 
       #
@@ -109,10 +105,10 @@ module TM4B
       def request(params)
          req = Net::HTTP::Post.new("/client/api/http.php")
          
-         req.set_form_data params.merge(:username => username, :password => password)
+         req.set_form_data params.merge(:username => TM4B.config.username, :password => TM4B.config.password)
          
-         conn = Net::HTTP.new("www.tm4b.com", use_ssl ? 443 : 80)
-         conn.use_ssl = use_ssl
+         conn = Net::HTTP.new("www.tm4b.com", TM4B.config.use_ssl ? 443 : 80)
+         conn.use_ssl = TM4B.config.use_ssl
          conn.start {|http| http.request(req) }
       end
 

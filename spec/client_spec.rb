@@ -9,16 +9,16 @@ describe TM4B::Client do
       TM4B.config.use_ssl  = true
    end
 
-   it 'should accept options for an overridden username, password and ssl' do
+   it 'should accept options to override username, password and ssl' do
       default_client = TM4B::Client.new
-      default_client.username.should == "foo"
-      default_client.password.should == "bar"
-      default_client.use_ssl.should == true
+      TM4B.config.username.should == "foo"
+      TM4B.config.password.should == "bar"
+      TM4B.config.use_ssl.should == true
 
       overridden_client = TM4B::Client.new :username => "one", :password => "two", :use_ssl => false
-      overridden_client.username.should == "one"
-      overridden_client.password.should == "two"
-      overridden_client.use_ssl.should  == false
+      TM4B.config.username.should == "one"
+      TM4B.config.password.should == "two"
+      TM4B.config.use_ssl.should  == false
    end
 
    context "broadcasting a message" do
