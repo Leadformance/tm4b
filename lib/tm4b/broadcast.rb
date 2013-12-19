@@ -6,18 +6,12 @@ module TM4B
    class Broadcast
       attr_reader :recipients
       def recipients=(recipients)
-         if String === recipients
-            recipients = [recipients]
-         end
-
-         @recipients = recipients.map {|r| r.gsub(/\D+/, '') }
+        @recipients = [recipients].flatten.map {|r| r.gsub(/\D+/, '') }
       end
 
       attr_reader :originator
       def originator=(originator)
-         originator = originator.to_s
-
-         if (1..11).include? originator.length
+         if originator.length.between?(1,11)
             @originator = originator
          else
             raise "originator must be between 1 and 11 characters long"
