@@ -24,14 +24,14 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "rake"
 
-  s.add_development_dependency "rspec", ">= 2.6.0"
+  s.add_development_dependency "rspec", "~> 2.6.0"
   s.add_development_dependency "fakeweb", ">= 1.3.0"
 
   # to make testing more fun (if only it needed less configuration)
   s.add_development_dependency "guard"
   s.add_development_dependency "guard-rspec"
 
-  s.add_dependency "activesupport", "~> 3.0"
+  s.add_dependency "activesupport"
 
   if RUBY_PLATFORM =~ /darwin/i
     # filesystem event support for OSX

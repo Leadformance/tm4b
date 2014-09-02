@@ -1,6 +1,8 @@
 # encoding: utf-8
 
 require 'rexml/document'
+require 'active_support/multibyte/chars'
+require 'active_support/multibyte/unicode'
 
 module TM4B
    class Broadcast
@@ -42,7 +44,7 @@ module TM4B
           encode!("UTF-8")
 
         if @encoding.to_s == "plain"
-          ActiveSupport::Multibyte.proxy_class.new(@message).
+          ActiveSupport::Multibyte::Chars.new(@message).
             gsub("€", "E").
             normalize(:kd).
             gsub(/[^\x00-\x7F]/,'').
