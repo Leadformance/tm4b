@@ -8,21 +8,27 @@ describe TM4B::Broadcast do
       @broadcast.originator = "tm4btest"
       @broadcast.message = "hello world"
    end
-   
+
    it "should return an encoded string if 'plain' encoding if selected" do
      @broadcast.message = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöùúûüýÿ"
      @broadcast.encoding = :plain
      @broadcast.parameters["msg"].should == "AAAAAACEEEEIIIINOOOOOUUUUYaaaaaaceeeeiiiinooooouuuuyy"
    end
-   
+
    it "should return valid string even if it's not UTF8 compliant" do
      @broadcast.message = "\xE2"
      @broadcast.encoding = :plain
      @broadcast.parameters["msg"].should == ""
    end
-   
+
    it "should return valid string even if it's not UTF8 compliant" do
      @broadcast.message = "\xE2"
+     @broadcast.encoding = :unicode
+     @broadcast.parameters["msg"].should == ""
+   end
+
+   it "should replace undefined chars by nothing" do
+     @broadcast.message = "’"
      @broadcast.encoding = :unicode
      @broadcast.parameters["msg"].should == ""
    end
