@@ -16,7 +16,8 @@ module TM4B
          if originator.length.between?(1,11)
             @originator = originator
          else
-            raise "originator must be between 1 and 11 characters long"
+           raise "Invalid length for originator: #{originator.inspect} - " \
+             "must be between 1 and 11 characters"
          end
       end
 
