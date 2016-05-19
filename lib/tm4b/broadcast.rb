@@ -40,9 +40,7 @@ module TM4B
       end
 
       def encoded_message
-        @message.
-          encode!("ISO-8859-1", :invalid => :replace, :undef => :replace, :replace => "").
-          encode!("UTF-8")
+        @message.encode!("UTF-8")
 
         if @encoding.to_s == "plain"
           ActiveSupport::Multibyte::Chars.new(@message).

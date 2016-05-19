@@ -18,7 +18,7 @@ class Tm4bTest < Thor
    def broadcast
       recipient    = options[:recipient].gsub(/\D+/, '')
       originator   = options[:originator]
-      message      = options[:message]
+      message      = options[:message].dup
       params       = {
          :simulated => options[:simulate],
          :split_method => options[:split].to_sym,
