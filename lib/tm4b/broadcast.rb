@@ -6,6 +6,19 @@ require 'active_support/multibyte/unicode'
 
 module TM4B
    class Broadcast
+
+      def initialize(opts)
+        opts = {
+          :encoding => :plain ,
+          :split_method => :concatenation_graceful
+        }.merge(opts)
+
+        opts.each do |k,v|
+          attribute = k.to_s + "="
+          self.send(attribute, v)
+	      end
+      end
+
       attr_reader :recipients
       def recipients=(recipients)
         @recipients = [recipients].flatten.map {|r| r.gsub(/\D+/, '') }
@@ -57,11 +70,6 @@ module TM4B
 
       # response variables
       attr_accessor :broadcast_id, :recipient_count, :balance_type, :credits, :balance, :neglected
-
-      def initialize
-         @encoding = :plain
-         @split_method = :concatenation_graceful
-      end
 
       def raw_response=(body)
          # parse the response body into an XML document

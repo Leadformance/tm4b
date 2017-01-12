@@ -42,16 +42,13 @@ module TM4B
       #   use when sending this message.  Use either "unicode" or "plain" or nil
       #
       def broadcast(recipients, originator, message, options={})
-         broadcast = Broadcast.new
-         broadcast.recipients = recipients
-         broadcast.originator = originator
-         broadcast.message    = message
+        args = {
+          :recipients => recipients,
+          :originator => originator,
+          :message => message
+        }.merge(options)
 
-         
-         broadcast.simulated = true if options[:simulated]
-         broadcast.split_method = options[:split_method] if options[:split_method]
-         broadcast.route = options[:route] if options[:route]
-         broadcast.encoding = options[:encoding] if options[:encoding]
+        broadcast = Broadcast.new(args)
 
          response = request(broadcast.parameters)
 
